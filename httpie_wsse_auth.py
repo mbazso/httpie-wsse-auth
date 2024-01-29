@@ -32,5 +32,5 @@ class WsseAuthPlugin(AuthPlugin):
     auth_type = 'wsse-auth'
     description = 'Sign requests using the WSSE authentication method'
 
-    def get_auth(self, access_id, secret_key):
-        return WsseAuth(access_id, secret_key)
+    def get_auth(self, username=access_id, password=secret_key):
+        return WsseAuth(username, password)
