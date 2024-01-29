@@ -19,11 +19,15 @@ class WsseAuth:
         now = datetime.datetime.utcnow()
         timestamp = now.strftime('%Y-%m-%dT%H:%M:%S+00:00')
 
-        string = nonce + timestamp + self.secret_key
-        sha1 = hashlib.sha1(string.encode('utf-8')).hexdigest()
-        digest = base64.b64encode(sha1.encode('utf-8')).rstrip()
+        raw_password_digest = nonce + timestamp + self.secret_key
 
-        r.headers['X-WSSE'] = 'UsernameToken Username="%s", PasswordDigest="%s", Nonce="%s", Created="%s"' % (self.access_id, digest, nonce, timestamp)
+        encrypted_password_digest = hashlib.sha1()
+        encrypted_password_digest.update(raw_password_digest.encode())
+        pass_sha1 = encrypted_password_digest.hexdigest()
+
+        pass_digest = base64.b64encode(pass_sha1.encode()).decode()
+
+        r.headers['X-WSSE'] = 'UsernameToken Username="%s", PasswordDigest="%s", Nonce="%s", Created="%s"' % (self.access_id, pass_digest, nonce, timestamp)
         return r
 
 class WsseAuthPlugin(AuthPlugin):
