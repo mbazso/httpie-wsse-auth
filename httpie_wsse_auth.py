@@ -5,7 +5,7 @@ WsseAuth auth plugin for HTTPie.
 from httpie.plugins import AuthPlugin
 import base64, datetime, hashlib, string, random
 
-__version__ = '0.1.0'
+__version__ = '0.1.2'
 __author__ = 'Andras Barthazi'
 __licence__ = 'MIT'
 
