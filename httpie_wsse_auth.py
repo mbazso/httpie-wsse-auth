@@ -20,8 +20,8 @@ class WsseAuth:
         timestamp = now.strftime('%Y-%m-%dT%H:%M:%S+00:00')
 
         string = nonce + timestamp + self.secret_key
-        sha1 = hashlib.sha1(string).hexdigest()
-        digest = base64.encodestring(sha1).rstrip()
+        sha1 = hashlib.sha1(string.encode('utf-8')).hexdigest()
+        digest = base64.b64encode(sha1.encode('utf-8')).rstrip()
 
         r.headers['X-WSSE'] = 'UsernameToken Username="%s", PasswordDigest="%s", Nonce="%s", Created="%s"' % (self.access_id, digest, nonce, timestamp)
         return r
@@ -32,5 +32,5 @@ class WsseAuthPlugin(AuthPlugin):
     auth_type = 'wsse-auth'
     description = 'Sign requests using the WSSE authentication method'
 
-    def get_auth(self, username=access_id, password=secret_key):
+    def get_auth(self, username=None, password=None):
         return WsseAuth(username, password)
